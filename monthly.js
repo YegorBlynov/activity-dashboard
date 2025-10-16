@@ -130,6 +130,7 @@ function renderAllMonths() {
         monthsContainer.appendChild(monthBlock);
         currentDateIterator.setMonth(currentDateIterator.getMonth() + 1);
     }
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function renderMonthGrid(gridContainer, year, month) {
