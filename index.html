@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Fitness-подобные графики из Google Sheets</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .controls button, .controls select {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s, transform 0.2s;
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .controls button:hover, .controls select:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        .controls button.active {
+            background-color: #007aff; /* Apple Blue */
+            color: white;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 50px; /* Для прокрутки */
+        }
+        .chart-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .chart-card h3 {
+            margin-top: 0;
+            color: #1a1a1a;
+            font-size: 1.2em;
+        }
+        .chart-canvas-wrapper {
+            width: 180px; /* Размер кольца */
+            height: 180px; /* Размер кольца */
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .chart-canvas-wrapper canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: #007aff;
+            z-index: 1000;
+            pointer-events: none; /* Чтобы можно было кликать под ним, если неактивен */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Цвета для колец (Apple Fitness-подобные) */
+        .color-move { color: #e53e3e; } /* Красный */
+        .color-exercise { color: #68d391; } /* Зеленый */
+        .color-stand { color: #4299e1; } /* Синий */
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .chart-canvas-wrapper {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+<body>
+    <div id="loadingOverlay" class="loading-overlay">Загрузка данных...</div>
+
+    <h1>Ежедневная активность</h1>
+
+    <div class="controls">
+	<a href="monthly.html" style="text-decoration: none; background-color: #555; color: white; padding: 10px 20px; border-radius: 8px; font-size: 16px;">📅 Обзор по месяцам</a>
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <button id="prevDayBtn">&lt; Предыдущий день</button>
+        <button id="todayBtn">Сегодня</button>
+        <button id="nextDayBtn">Следующий день &gt;</button>
+    </div>
+
+    <div id="chartsGrid" class="charts-grid">
+        </div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>

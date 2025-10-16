@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обзор по месяцам</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1A1A1D;
+            color: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+        }
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007aff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+        .month-block {
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
+        }
+        .month-title {
+            font-size: 2.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            padding-left: 10px;
+        }
+        .month-stats {
+            font-size: 1.4em;
+            font-weight: 400;
+            padding-left: 10px;
+            margin-bottom: 25px;
+        }
+        .month-stats p {
+            margin: 5px 0;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+        }
+        .day-cell {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: #1c1c1e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .day-cell .date-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.4em;
+            font-weight: 400;
+            z-index: 2;
+        }
+        .day-cell .chart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); display: flex;
+            justify-content: center; align-items: center; font-size: 2em;
+            color: #007aff; z-index: 1000; opacity: 0;
+            pointer-events: none; transition: opacity 0.3s;
+        }
+        .loading-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .day-cell.selected {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .details-popup {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #2C2C2F;
+            color: #fff;
+            padding: 20px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 1100;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .details-popup.visible {
+            transform: translateY(0);
+        }
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .close-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 30px;
+        }
+        .details-stats .stat-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.4em;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .stat-item .icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .stat-item .label {
+            color: #8e8e93;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                gap: 10px;
+            }
+            .day-cell .date-label {
+                font-size: 1em;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div id="loadingOverlay" class="loading-overlay active">Загрузка...</div>
+
+    <div class="header">
+        <a href="index.html" class="nav-link">&larr; К ежедневному обзору</a>
+        <h1>Обзор по месяцам</h1>
+        <div style="width: 150px;"></div>
+    </div>
+
+    <div id="monthsContainer"></div>
+
+    <div id="detailsPopup" class="details-popup">
+        <div class="details-header">
+            <span id="detailsDate"></span>
+            <button id="closePopupBtn" class="close-btn">&times;</button>
+        </div>
+        <div id="detailsStats" class="details-stats">
+        </div>
+    </div>
+
+    <script src="monthly.js"></script>
+</body>
+</html>
