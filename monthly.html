@@ -8,39 +8,50 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
             background-color: #1A1A1D;
             color: #fff;
+            /* ✅ Добавляем отступ сверху, равный высоте хедера */
+            padding-top: 120px; 
         }
-        .header {
+
+        /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ ХЕДЕРА --- */
+        .sticky-header {
+            position: fixed; /* Фиксируем хедер */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000; /* Черный фон панели */
+            padding: 30px 60px;
+            box-sizing: border-box; /* Чтобы padding не влиял на ширину */
+            z-index: 1200;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Небольшая тень для отделения */
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
         }
-        h1 {
-            font-size: 1.5em;
-            text-align: center;
-            flex-grow: 1;
-        }
-        .nav-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007aff;
-            color: white;
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: #fff;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            white-space: nowrap;
+            font-size: 2.2em;
+            font-weight: 600;
+            padding: 10px; /* Удобная область для нажатия */
+            margin-left: -10px; /* Компенсируем padding для выравнивания */
         }
+        .back-button span {
+            margin-left: 8px;
+        }
+        /* --- КОНЕЦ НОВЫХ СТИЛЕЙ --- */
+
         .month-block {
             max-width: 1200px;
             margin: 0 auto 50px auto;
+            padding: 0 20px; /* Добавляем боковые отступы для контента */
         }
         .month-title {
             font-size: 2.2em;
             font-weight: 600;
+            margin-top: 20px; /* Добавляем отступ сверху */
             margin-bottom: 5px;
             padding-left: 10px;
         }
@@ -68,7 +79,7 @@
             justify-content: center;
             align-items: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            -webkit-tap-highlight-color: transparent; /* ✅ Убираем синюю рамку при нажатии на мобильных */
+            -webkit-tap-highlight-color: transparent;
         }
         .day-cell .date-label {
             position: absolute;
@@ -78,7 +89,7 @@
             font-size: 1.4em;
             font-weight: 400;
             z-index: 2;
-            user-select: none; /* ✅ Запрещаем выделение текста с датой */
+            user-select: none;
         }
         .day-cell .chart-container {
             position: absolute;
@@ -99,7 +110,7 @@
         
         .day-cell.selected {
             transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 100px 150px rgba(0, 0, 0, 0.7);
             z-index: 10;
         }
 
@@ -165,23 +176,29 @@
             .calendar-grid {
                 gap: 10px;
             }
+            .back-button {
+                font-size: 1.8em;
+            }
             .day-cell .date-label {
                 font-size: 0.7em;
+            }
+            .day-cell.selected {
+                transform: scale(1.2);
             }
             h1 {
                 font-size: 1.3em;
             }
             .month-title {
-                font-size: 1.8em;
+                font-size: 1.5em;
             }
             .month-stats {
-                font-size: 1em;
+                font-size: 0.9em;
             }
             .details-header {
                 font-size: 1.5em;
             }
             .details-stats .stat-item {
-                font-size: 1em;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -191,11 +208,14 @@
 
     <div id="loadingOverlay" class="loading-overlay active">Загрузка...</div>
 
-    <div class="header">
-        <a href="index.html" class="nav-link">&larr; К ежедневному обзору</a>
-        <h1>Обзор по месяцам</h1>
-        <div style="width: 150px;"></div>
-    </div>
+    <header class="sticky-header">
+        <a href="index.html" class="back-button">
+            <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5 1.5L2 10.5L10.5 19.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span> Daily activity</span>
+        </a>
+    </header>
 
     <div id="monthsContainer"></div>
 

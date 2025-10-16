@@ -267,7 +267,7 @@ function renderDayChart(container, data) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            rotation: -90,
+            rotation: 0,
             circumference: 360,
             plugins: { legend: { display: false }, tooltip: { enabled: false } },
             animation: { duration: 0 },
