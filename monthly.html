@@ -68,6 +68,7 @@
             justify-content: center;
             align-items: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            -webkit-tap-highlight-color: transparent; /* ✅ Убираем синюю рамку при нажатии на мобильных */
         }
         .day-cell .date-label {
             position: absolute;
@@ -77,6 +78,7 @@
             font-size: 1.4em;
             font-weight: 400;
             z-index: 2;
+            user-select: none; /* ✅ Запрещаем выделение текста с датой */
         }
         .day-cell .chart-container {
             position: absolute;
@@ -164,10 +166,8 @@
                 gap: 10px;
             }
             .day-cell .date-label {
-                font-size: 1em; /* Этот стиль уже был */
+                font-size: 1em;
             }
-
-            /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ --- */
             h1 {
                 font-size: 1.3em;
             }
@@ -175,13 +175,13 @@
                 font-size: 1.8em;
             }
             .month-stats {
-                font-size: 1em; /* Уменьшаем текст под заголовком */
+                font-size: 1em;
             }
             .details-header {
-                font-size: 1.5em; /* Уменьшаем заголовок в popup */
+                font-size: 1.5em;
             }
             .details-stats .stat-item {
-                font-size: 1em; /* Уменьшаем статистику в popup */
+                font-size: 1em;
             }
         }
     </style>
