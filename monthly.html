@@ -67,9 +67,11 @@
         .day-cell .date-label {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.4em; font-weight: 400;
-            line-height: 1; /* ✅ Убирает лишнюю высоту строки для точного центрирования */
-            z-index: 2; user-select: none;
+            font-size: 1.4em; 
+            font-weight: 400;
+            //line-height: 1;
+            z-index: 2; 
+            user-select: none;
         }
         .day-cell .chart-container {
             position: absolute; top: 0; left: 0;
@@ -86,8 +88,8 @@
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.8); display: flex;
-            justify-content: center; align-items: center; font-size: 2em;
-            color: #007aff; z-index: 1000; opacity: 0;
+            justify-content: center; align-items: center; font-size: 1.5em;
+            color: #fff; z-index: 1000; opacity: 0;
             pointer-events: none; transition: opacity 0.3s;
         }
         .loading-overlay.active { opacity: 1; pointer-events: all; }
