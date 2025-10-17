@@ -218,7 +218,7 @@ function renderDayChart(container, data) {
     const datasets = [];
     const ringThickness = 50;
     const ringGap = 5;
-    const outerRadius = 100;
+    const outerRadius = 98;
     const middleRadius = outerRadius - ringGap;
     const innerRadius = middleRadius - ringGap;
     
