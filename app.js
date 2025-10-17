@@ -21,6 +21,7 @@ const widgetStats = document.getElementById('widgetStats');
 const chartContainer = document.getElementById('chartContainer');
 const chartDateLabel = document.getElementById('chartDateLabel');
 
+
 // --- ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ---
 function hexToRgba(hex, alpha) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -73,7 +74,7 @@ function renderTodayWidget(data) {
     widgetDate.textContent = today.toLocaleDateString('ru-RU', dateOptions);
 
     chartDateLabel.textContent = today.getDate();
-    renderDayChart(chartContainer, data); // Вызываем обновленную функцию
+    renderDayChart(chartContainer, data);
 
     let statsHTML = '';
     if (data) {
@@ -108,8 +109,7 @@ function renderTodayWidget(data) {
 }
 
 
-// --- ✅ ОБНОВЛЕННАЯ ФУНКЦИЯ ОТРИСОВКИ КОЛЕЦ (ИЗ monthly.js) ---
-
+// --- ФУНКЦИЯ ОТРИСОВКИ КОЛЕЦ ---
 function renderDayChart(container, data) {
     container.innerHTML = '';
     const canvas = document.createElement('canvas');

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График веса</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #1A1A1D;
+            color: #fff;
+            padding-top: 60px; 
+        }
+        .sticky-header {
+            position: fixed; top: 0; left: 0;
+            width: 100%;
+            background-color: #000;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            z-index: 1200;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+        }
+        .back-button {
+            display: flex; align-items: center;
+            color: #fff; text-decoration: none;
+            font-size: 1.1em; font-weight: 500;
+            padding: 10px; margin-left: -10px;
+        }
+        .back-button span { margin-left: 8px; }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px; /* Увеличим отступ */
+            margin-bottom: 20px;
+        }
+        .controls button {
+            font-family: inherit;
+            /* ✅ Увеличиваем кнопки */
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px; /* Увеличим скругление */
+            background-color: #2C2C2F;
+            color: #fff;
+            font-size: 1.2em; /* Увеличиваем шрифт */
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .controls button.active {
+             /* ✅ Меняем цвет на зеленый */
+            background-color: #BEFF26;
+            color: #000; /* Черный текст для контраста */
+            font-weight: 600;
+        }
+
+        .chart-container {
+            padding: 20px;
+            background-color: #2C2C2F;
+            border-radius: 20px;
+        }
+        #loading-text {
+            text-align: center;
+            font-size: 1.5em;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <header class="sticky-header">
+        <a href="index.html" class="back-button">
+            <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5 1.5L2 10.5L10.5 19.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Weight</span>
+        </a>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="controls">
+            <button id="btnAll" class="active">All time</button>
+            <button id="btnYear">Last year</button>
+            </div>
+
+        <div class="chart-container">
+            <p id="loading-text">Загрузка данных...</p>
+            <canvas id="weightChart"></canvas>
+        </div>
+    </div>
+
+    <script src="weight.js"></script>
+</body>
+</html>

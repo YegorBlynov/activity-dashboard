@@ -11,19 +11,22 @@
             background-color: #1A1A1D;
             color: #fff;
             display: flex;
+            /* ✅ ИЗМЕНЕНИЕ: Располагаем элементы в столбик */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
             box-sizing: border-box;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        /* --- ✅ ИЗМЕНЕНИЯ ЗДЕСЬ --- */
         .today-widget {
             display: flex;
-            flex-direction: row; /* Горизонтальное расположение */
-            justify-content: space-between; /* Элементы по краям */
-            align-items: center; /* Центрирование по вертикали */
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
             background-color: #2C2C2F;
             color: #fff;
             padding: 20px;
@@ -31,8 +34,16 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             text-decoration: none;
             width: 100%;
-            max-width: 450px; /* Немного увеличим макс. ширину */
+            max-width: 450px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box; /* Добавляем для консистентности */
+        }
+        
+        /* ✅ НОВЫЙ СТИЛЬ: для виджета-ссылки, чтобы он был по центру */
+        .link-widget {
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 600;
         }
 
         .today-widget:hover {
@@ -40,21 +51,19 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
-        /* Новый контейнер для текста */
         .widget-info {
             display: flex;
             flex-direction: column;
         }
-        
+
         .widget-chart-container {
             position: relative;
-            width: 150px; /* Уменьшим размер для новой компоновки */
+            width: 150px;
             height: 150px;
-            flex-shrink: 0; /* Запрещаем сжиматься */
-            margin-left: 20px; /* Отступ слева от текста */
+            flex-shrink: 0;
+            margin-left: 20px;
         }
-        /* --- КОНЕЦ ИЗМЕНЕНИЙ --- */
-
+        
         .widget-chart-container canvas {
             border: 1px solid transparent;
             box-sizing: border-box;
@@ -112,6 +121,15 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
+
+        @media (max-width: 768px) {
+            .widget-header {
+                font-size: 1.3em;
+            }
+            .widget-stats .stat-item {
+                font-size: 1em;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -120,21 +138,20 @@
     <div id="loadingOverlay">Загрузка...</div>
 
     <a href="monthly.html" id="todayWidget" class="today-widget" style="display: none;">
-        
         <div class="widget-info">
             <div class="widget-header">
                 <span id="widgetDate"></span>
             </div>
-            
-            <div id="widgetStats" class="widget-stats">
-            </div>
+            <div id="widgetStats" class="widget-stats"></div>
         </div>
-
         <div class="widget-chart-container" id="chartContainer">
             <div class="widget-chart-date-label" id="chartDateLabel"></div>
         </div>
-        
     </a>
+
+    <a href="weight.html" class="today-widget link-widget">
+        <span>Weight Charts</span>
+        </a>
 
     <script src="app.js"></script>
 
