@@ -299,6 +299,22 @@ function renderDayChart(container, data) {
 }
 // --- ЗАПУСК И ИНИЦИАЛИЗАЦИЯ ---
 closePopupBtn.addEventListener('click', hideDetailsPopup);
-spotlightOverlay.addEventListener('click', hideDetailsPopup); // ✅ Закрываем popup по клику на оверлей
 window.addEventListener('scroll', hideDetailsPopup);
+
+// ✅ ДОБАВЛЕН НОВЫЙ "УМНЫЙ" ОБРАБОТЧИК
+document.addEventListener('click', (event) => {
+    // Проверяем, видим ли мы popup
+    if (!detailsPopup.classList.contains('visible')) {
+        return;
+    }
+
+    // Проверяем, был ли клик на ячейке дня или внутри самого popup
+    const clickedOnDayCell = event.target.closest('.day-cell');
+    const clickedInPopup = event.target.closest('.details-popup');
+
+    // Если клик был НЕ на ячейке и НЕ внутри popup, то закрываем
+    if (!clickedOnDayCell && !clickedInPopup) {
+        hideDetailsPopup();
+    }
+});
 fetchData();
