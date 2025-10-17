@@ -68,6 +68,7 @@
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 1.4em; font-weight: 400;
+            line-height: 1; /* ✅ Убирает лишнюю высоту строки для точного центрирования */
             z-index: 2; user-select: none;
         }
         .day-cell .chart-container {
@@ -76,12 +77,9 @@
             z-index: 1;
         }
         
-        /* ✅ ИЗМЕНЕНИЯ ЗДЕСЬ */
         .chart-container canvas {
             display: block;
-            /* Добавляем невидимую рамку, чтобы "сжать" область рисования */
             border: 1px solid transparent; 
-            /* Убеждаемся, что рамка является частью 100% размера элемента */
             box-sizing: border-box; 
         }
 
@@ -155,7 +153,7 @@
         @media (max-width: 768px) {
             .calendar-grid { gap: 10px; }
             .back-button { font-size: 1.8em; }
-            .day-cell .date-label { font-size: 0.7em; }
+            .day-cell .date-label { font-size: 0.6em; }
             .day-cell.selected { transform: scale(1.3); }
             .month-title { font-size: 1.5em; }
             .month-stats { font-size: 0.9em; }
