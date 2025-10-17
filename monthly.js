@@ -197,10 +197,12 @@ function showDetailsPopup(data) {
     `;
 
     detailsPopup.classList.add('visible');
+    spotlightOverlay.classList.add('visible'); // ✅ Показываем оверлей
 }
 
 function hideDetailsPopup() {
     detailsPopup.classList.remove('visible');
+    spotlightOverlay.classList.remove('visible'); // ✅ Скрываем оверлей
     document.querySelectorAll('.day-cell.selected').forEach(selectedCell => {
         selectedCell.classList.remove('selected');
     });
@@ -220,18 +222,38 @@ function renderDayChart(container, data) {
     const middleRadius = outerRadius - ringGap;
     const innerRadius = middleRadius - ringGap;
     
+    // ✅ 1. Устанавливаем базовый минимальный процент, который хорошо смотрится на ВНУТРЕННЕМ кольце.
+    const MIN_VISUAL_PERCENTAGE = 7; // (в процентах, можно настроить по вкусу)
+
+
+    // 2. Рассчитываем динамический минимум, основываясь на ОТНОШЕНИИ СРЕДНИХ РАДИУСОВ.
     const ringConfig = [
-        { dataKey: 'Steps', targetKey: 'Steps Target', color: COLORS.steps, background: hexToRgba(COLORS.steps, 0.2), radius: outerRadius, cutout: outerRadius - ringThickness, borderRadius: 8 },
-        { dataKey: 'Active Time', targetKey: 'Active Time Target', color: COLORS.activeTime, background: hexToRgba(COLORS.activeTime, 0.2), radius: middleRadius, cutout: middleRadius - ringThickness, borderRadius: 8 },
-        { dataKey: 'Calories', targetKey: 'Calories Target', color: COLORS.calories, background: hexToRgba(COLORS.calories, 0.2), radius: innerRadius, cutout: innerRadius - ringThickness, borderRadius: 8 },
+        { 
+            dataKey: 'Steps', targetKey: 'Steps Target', color: COLORS.steps, background: hexToRgba(COLORS.steps, 0.2), radius: outerRadius, cutout: outerRadius - ringThickness, borderRadius: 8,
+            minFillPercentage: MIN_VISUAL_PERCENTAGE * 0.5
+        },
+        { 
+            dataKey: 'Active Time', targetKey: 'Active Time Target', color: COLORS.activeTime, background: hexToRgba(COLORS.activeTime, 0.2), radius: middleRadius, cutout: middleRadius - ringThickness, borderRadius: 8,
+            minFillPercentage: MIN_VISUAL_PERCENTAGE * 0.68
+        },
+        { 
+            dataKey: 'Calories', targetKey: 'Calories Target', color: COLORS.calories, background: hexToRgba(COLORS.calories, 0.2), radius: innerRadius, cutout: innerRadius - ringThickness, borderRadius: 8,
+            minFillPercentage: MIN_VISUAL_PERCENTAGE 
+        },
     ];
+
     
     ringConfig.forEach(config => {
         let chartData, chartColors, chartBorderRadius;
         if (data) {
             const value = parseFloat(data[config.dataKey]) || 0;
             const target = parseFloat(data[config.targetKey]) || 1;
-            const percentage = (value / target) * 100;
+            const calculatedPercentage = (value / target) * 100;
+
+            // ✅ 3. Используем новый динамический минимум для каждого кольца
+            const minFill = config.minFillPercentage;
+            const percentage = value > 0 ? Math.max(minFill, calculatedPercentage) : 0;
+            
             if (percentage > 0) {
                 chartData = [Math.min(percentage, 100), 100 - Math.min(percentage, 100)];
                 chartColors = [config.color, config.background];
@@ -275,7 +297,8 @@ function renderDayChart(container, data) {
         }
     });
 }
-
 // --- ЗАПУСК И ИНИЦИАЛИЗАЦИЯ ---
 closePopupBtn.addEventListener('click', hideDetailsPopup);
+spotlightOverlay.addEventListener('click', hideDetailsPopup); // ✅ Закрываем popup по клику на оверлей
+window.addEventListener('scroll', hideDetailsPopup);
 fetchData();
