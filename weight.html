@@ -39,26 +39,24 @@
 
         .controls {
             display: flex;
-            gap: 20px; /* Увеличим отступ */
+            gap: 20px;
             margin-bottom: 20px;
         }
         .controls button {
             font-family: inherit;
-            /* ✅ Увеличиваем кнопки */
             padding: 12px 24px;
             border: none;
-            border-radius: 12px; /* Увеличим скругление */
+            border-radius: 12px;
             background-color: #2C2C2F;
             color: #fff;
-            font-size: 1.2em; /* Увеличиваем шрифт */
+            font-size: 1.2em;
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s;
         }
         .controls button.active {
-             /* ✅ Меняем цвет на зеленый */
             background-color: #BEFF26;
-            color: #000; /* Черный текст для контраста */
+            color: #000;
             font-weight: 600;
         }
 
@@ -74,7 +72,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-</head>
+    </head>
 <body>
     <header class="sticky-header">
         <a href="index.html" class="back-button">
@@ -89,7 +87,7 @@
         <div class="controls">
             <button id="btnAll" class="active">All time</button>
             <button id="btnYear">Last year</button>
-            </div>
+        </div>
 
         <div class="chart-container">
             <p id="loading-text">Загрузка данных...</p>
