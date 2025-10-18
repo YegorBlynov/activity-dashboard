@@ -1,7 +1,5 @@
 // ====== КОНФИГУРАЦИЯ ========
-const SPREADSHEET_ID = '13tjmIANix1oLMiloTeFyLmJ7MLYBPMVosBeDlnLEYlk';
-const API_KEY = 'AIzaSyD0bpldnBfTiugPRWgYcJpUvsCj1Kxv9Uo';
-const RANGE = 'A1:G';
+const API_URL = '/.netlify/functions/getActivityData';
 // =============================
 
 // ====== ЦВЕТА ===============

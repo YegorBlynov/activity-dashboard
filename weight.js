@@ -1,7 +1,5 @@
 // ====== КОНФИГУРАЦИЯ ========
-const SPREADSHEET_ID = '1h5j7bxe_K4XxWQM2yuGiHbVh2s7X3rElsTvZwVNUZGs'; 
-const API_KEY = 'AIzaSyD0bpldnBfTiugPRWgYcJpUvsCj1Kxv9Uo'; 
-const RANGE = 'A1:B'; // Дата и Вес
+const API_URL = '/.netlify/functions/getWeightData';
 // =============================
 
 const API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
