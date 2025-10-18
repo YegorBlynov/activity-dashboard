@@ -10,8 +10,6 @@ const COLORS = {
 };
 // =============================
 
-const API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
-
 const loadingOverlay = document.getElementById('loadingOverlay');
 const todayWidget = document.getElementById('todayWidget');
 const widgetDate = document.getElementById('widgetDate');

@@ -2,8 +2,6 @@
 const API_URL = '/.netlify/functions/getWeightData';
 // =============================
 
-const API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
-
 const loadingText = document.getElementById('loading-text');
 const chartCanvas = document.getElementById('weightChart');
 const btnAll = document.getElementById('btnAll');
