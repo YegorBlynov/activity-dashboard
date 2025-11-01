@@ -196,22 +196,22 @@
         .month-cell-yearly {
             background-color: #2C2C2F;
             border-radius: 12px;
-            padding: 15px;
+            padding: 10px; /* Было 15px */
         }
         .month-header-yearly {
-            font-size: 1.2em;
+            font-size: 1.1em; /* Было 1.2em */
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 3px; /* Было 5px */
         }
         .month-stats-yearly {
-            font-size: 0.9em;
+            font-size: 0.8em; /* Было 0.9em */
             color: #8e8e93;
-            margin-bottom: 15px;
+            margin-bottom: 10px; /* Было 15px */
         }
         .day-grid-yearly {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px; /* Промежуток между кругами */
+            gap: 5px;
         }
         .day-cell-yearly {
             display: flex;
@@ -219,12 +219,10 @@
             align-items: center;
         }
         .day-circle {
-            /* Убираем фикс. ширину, делаем адаптивным */
             width: 100%;
-            padding-bottom: 100%; /* Делает элемент квадратным */
+            padding-bottom: 100%;
             position: relative;
         }
-        /* Новый стиль, чтобы canvas заполнил .day-circle */
         .day-circle canvas {
             position: absolute;
             top: 0;
@@ -233,9 +231,9 @@
             height: 100%;
         }
         .day-circle-date {
-            font-size: 0.8em;
+            font-size: 0.7em; /* Было 0.8em */
             color: #8e8e93;
-            margin-top: 4px;
+            margin-top: 2px; /* Было 4px */
         }
         /* -------------------------------------- */
 
@@ -255,19 +253,13 @@
 
             /* --- ✅ ИЗМЕНЕНИЯ В МОБИЛЬНЫХ СТИЛЯХ ГОДОВОГО ОБЗОРА --- */
             .months-grid-yearly {
-                /* grid-template-columns: 1fr; */ /* УДАЛЕНО: 3 колонки остаются */
-                gap: 10px; /* Уменьшаем промежуток между месяцами */
-            }
-            .month-cell-yearly {
-                padding: 10px; /* Уменьшаем отступы внутри карточки месяца */
+                gap: 10px;
             }
             .day-grid-yearly {
-                gap: 3px; /* Уменьшаем промежуток между кругами */
+                gap: 3px;
             }
-            .day-circle-date {
-                font-size: 0.7em; /* Уменьшаем шрифт даты */
-                margin-top: 2px;
-            }
+            /* Стили для .month-cell-yearly, .day-circle-date и др. теперь наследуются 
+               от более компактных базовых стилей, поэтому их не нужно переопределять. */
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

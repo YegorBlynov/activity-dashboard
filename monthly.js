@@ -32,6 +32,9 @@ const MONTH_NAMES_SHORT = [
     'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'
 ];
 
+// ✅ Новая переменная для отслеживания состояния
+let hasRenderedYearlyView = false;
+
 // --- ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ---
 function hexToRgba(hex, alpha) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -72,8 +75,9 @@ function processData(values) {
 
     allData.sort((a, b) => a.dateObject - b.dateObject);
 
+    // ✅ Оставляем только рендер по месяцам при загрузке
     renderByMonthView();
-    renderByYearView();
+    // ❌ renderByYearView(); // Убираем отсюда
 }
 
 function calculateMonthStats(monthData) {
@@ -447,9 +451,17 @@ btnByMonth.addEventListener('click', () => {
     yearsContainer.style.display = 'none';
 });
 
+// ✅ ОБНОВЛЕННЫЙ ОБРАБОТЧИК
 btnByYear.addEventListener('click', () => {
     btnByYear.classList.add('active');
     btnByMonth.classList.remove('active');
+    
+    // ✅ Рендерим годовой вид только при первом нажатии
+    if (!hasRenderedYearlyView) {
+        renderByYearView();
+        hasRenderedYearlyView = true;
+    }
+
     monthsContainer.style.display = 'none';
     yearsContainer.style.display = 'block';
 });
