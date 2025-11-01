@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity History</title>
-	<link rel="icon" type="image/png" href="favicon.png">
+    <title>Обзор по месяцам</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -22,16 +21,41 @@
             z-index: 1200;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             display: flex;
+            justify-content: space-between; /* Распределяем элементы */
             align-items: center;
         }
         .back-button {
             display: flex; align-items: center;
             color: #fff; text-decoration: none;
-            font-size: 2.2em; font-weight: 600;
+            font-size: 1.1em; font-weight: 500;
             padding: 10px; margin-left: -10px;
         }
         .back-button span { margin-left: 8px; }
-        
+
+        /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ КНОПОК ПЕРЕКЛЮЧЕНИЯ --- */
+        .view-controls {
+            display: flex;
+            background-color: #2C2C2F;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .view-controls button {
+            font-family: inherit;
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            font-size: 0.9em;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .view-controls button.active {
+            background-color: #555;
+        }
+        /* --- КОНЕЦ НОВЫХ СТИЛЕЙ --- */
+
         .month-block {
             max-width: 1200px;
             margin: 0 auto 50px auto;
@@ -70,7 +94,7 @@
             transform: translate(-50%, -50%);
             font-size: 1.4em; 
             font-weight: 400;
-            //line-height: 1;
+            line-height: 1;
             z-index: 2; 
             user-select: none;
         }
@@ -89,7 +113,7 @@
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.8); display: flex;
-            justify-content: center; align-items: center; font-size: 1.5em;
+            justify-content: center; align-items: center; font-size: 2em;
             color: #fff; z-index: 1000; opacity: 0;
             pointer-events: none; transition: opacity 0.3s;
         }
@@ -153,15 +177,83 @@
             color: #8e8e93; margin-left: 5px;
         }
 
+        /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ ГОДОВОГО ОБЗОРА --- */
+        #yearsContainer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .year-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
+        }
+        .months-grid-yearly {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .month-cell-yearly {
+            background-color: #2C2C2F;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .month-header-yearly {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .month-stats-yearly {
+            font-size: 0.9em;
+            color: #8e8e93;
+            margin-bottom: 15px;
+        }
+        .day-grid-yearly {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .day-cell-yearly {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .day-circle {
+            width: 30px; /* Размер круга */
+            height: 30px;
+            position: relative;
+        }
+        .day-circle-date {
+            font-size: 0.8em;
+            color: #8e8e93;
+            margin-top: 4px;
+        }
+        /* -------------------------------------- */
+
+
         @media (max-width: 768px) {
+            .sticky-header { padding: 10px 15px; }
+            .back-button { font-size: 1em; }
+            .view-controls button { padding: 6px 12px; font-size: 0.8em; }
+
             .calendar-grid { gap: 10px; }
-            .back-button { font-size: 1.8em; }
             .day-cell .date-label { font-size: 0.6em; }
             .day-cell.selected { transform: scale(1.3); }
             .month-title { font-size: 1.5em; }
             .month-stats { font-size: 0.9em; }
             .details-header { font-size: 1.5em; }
             .details-stats .stat-item { font-size: 0.9em; }
+
+            /* --- ✅ МОБИЛЬНЫЕ СТИЛИ ДЛЯ ГОДОВОГО ОБЗОРА --- */
+            .months-grid-yearly {
+                grid-template-columns: 1fr; /* Один месяц в ряд */
+            }
+            .day-circle {
+                width: 25px;
+                height: 25px;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -176,11 +268,18 @@
             <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.5 1.5L2 10.5L10.5 19.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>Back</span>
+            <span> Daily activity</span>
         </a>
+        
+        <div class="view-controls">
+            <button id="btnByMonth" class="active">By Month</button>
+            <button id="btnByYear">By Year</button>
+        </div>
     </header>
 
     <div id="monthsContainer"></div>
+    
+    <div id="yearsContainer" style="display: none;"></div>
 
     <div id="detailsPopup" class="details-popup">
         <div class="details-header">
