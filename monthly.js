@@ -1,5 +1,5 @@
 // ====== КОНФИГУРАЦИЯ ========
-const API_URL = '/.netlify/functions/getActivityData'; // Безопасный URL
+const API_URL = '/.netlify/functions/getActivityData';
 // =============================
 
 // ====== ЦВЕТА ===============
@@ -18,11 +18,9 @@ const detailsStats = document.getElementById('detailsStats');
 const closePopupBtn = document.getElementById('closePopupBtn');
 const spotlightOverlay = document.getElementById('spotlightOverlay');
 
-// ✅ НОВЫЕ ПЕРЕМЕННЫЕ
 const btnByMonth = document.getElementById('btnByMonth');
 const btnByYear = document.getElementById('btnByYear');
 const yearsContainer = document.getElementById('yearsContainer');
-// -------------------------
 
 let allData = [];
 const MONTH_NAMES = [
@@ -72,15 +70,12 @@ function processData(values) {
         return rowData;
     }).filter(d => d.dateObject);
 
-    // Сортируем данные один раз при загрузке
     allData.sort((a, b) => a.dateObject - b.dateObject);
 
-    // ✅ ЗАПУСКАЕМ ОБЕ ФУНКЦИИ ОТРИСОВКИ
     renderByMonthView();
     renderByYearView();
 }
 
-// --- ✅ ЛОГИКА СТАТИСТИКИ ВЫНЕСЕНА В ОТДЕЛЬНУЮ ФУНКЦИЮ ---
 function calculateMonthStats(monthData) {
     let fullyClosedDays = 0;
     const totals = { steps: 0, activeTime: 0, calories: 0 };
@@ -110,7 +105,7 @@ function calculateMonthStats(monthData) {
 }
 
 
-// --- 1. ЛОГИКА ДЛЯ ПОМЕСЯЧНОГО ВИДА (старая, переименована) ---
+// --- 1. ЛОГИКА ДЛЯ ПОМЕСЯЧНОГО ВИДА ---
 
 function renderByMonthView() {
     if (allData.length === 0) return;
@@ -178,7 +173,7 @@ function renderMonthGrid(gridContainer, year, month) {
             d.dateObject.getDate() === day
         );
         
-        renderDayChart(chartContainer, currentDayData); // Это кольцевая диаграмма
+        renderDayChart(chartContainer, currentDayData);
         
         if (currentDayData) {
             cell.style.cursor = 'pointer';
@@ -192,8 +187,7 @@ function renderMonthGrid(gridContainer, year, month) {
 }
 
 function renderDayChart(container, data) {
-    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ,
-    // она по-прежнему рисует 3 КОЛЬЦА для помесячного вида)
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     container.innerHTML = '';
     const canvas = document.createElement('canvas');
     container.appendChild(canvas);
@@ -261,13 +255,14 @@ function renderDayChart(container, data) {
 }
 
 
-// --- 2. ✅ НОВАЯ ЛОГИКА ДЛЯ ПОГОДОВОГО ВИДА ---
+// --- 2. ЛОГИКА ДЛЯ ПОГОДОВОГО ВИДА ---
 
 function renderByYearView() {
     if (allData.length === 0) return;
     yearsContainer.innerHTML = '';
 
-    const years = [...new Set(allData.map(d => d.dateObject.getFullYear()))].sort((a, b) => b - a);
+    // ✅ ИЗМЕНЕНА СОРТИРОВКА: a - b (сначала старые, потом новые)
+    const years = [...new Set(allData.map(d => d.dateObject.getFullYear()))].sort((a, b) => a - b);
 
     for (const year of years) {
         const yearBlock = document.createElement('div');
@@ -337,7 +332,7 @@ function renderYearlyMonthGrid(gridContainer, year, month, daysInMonth) {
             d.dateObject.getDate() === day
         );
 
-        renderYearlyDayChart(canvas, currentDayData); // Новая функция для 3-сегментного круга
+        renderYearlyDayChart(canvas, currentDayData);
 
         const dateLabel = document.createElement('div');
         dateLabel.classList.add('day-circle-date');
@@ -351,21 +346,20 @@ function renderYearlyMonthGrid(gridContainer, year, month, daysInMonth) {
 
 function renderYearlyDayChart(canvas, data) {
     let chartData, chartColors;
-    const offColor = 'rgba(255, 255, 255, 0.1)'; // Цвет "пустого" сегмента
+    const offColor = 'rgba(255, 255, 255, 0.1)';
 
     if (data) {
         const stepsDone = (parseFloat(data['Steps']) || 0) >= (parseFloat(data['Steps Target']) || 1);
         const timeDone = (parseFloat(data['Active Time']) || 0) >= (parseFloat(data['Active Time Target']) || 1);
         const calsDone = (parseFloat(data['Calories']) || 0) >= (parseFloat(data['Calories Target']) || 1);
 
-        chartData = [1, 1, 1]; // 3 равных сегмента
+        chartData = [1, 1, 1];
         chartColors = [
             stepsDone ? COLORS.steps : offColor,
             timeDone ? COLORS.activeTime : offColor,
             calsDone ? COLORS.calories : offColor
         ];
     } else {
-        // Нет данных за день - полностью пустой круг
         chartData = [1];
         chartColors = [offColor];
     }
@@ -376,15 +370,15 @@ function renderYearlyDayChart(canvas, data) {
             datasets: [{
                 data: chartData,
                 backgroundColor: chartColors,
-                borderColor: '#2C2C2F', // Цвет фона карточки для создания промежутков
+                borderColor: '#2C2C2F',
                 borderWidth: 2,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '30%', // Небольшое отверстие в центре
-            rotation: -90, // Начинаем с 12 часов
+            cutout: '30%',
+            rotation: -90,
             circumference: 360,
             plugins: { legend: { display: false }, tooltip: { enabled: false } },
             animation: { duration: 0 },
@@ -446,7 +440,6 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// ✅ ОБРАБОТЧИКИ ПЕРЕКЛЮЧЕНИЯ ВИДА
 btnByMonth.addEventListener('click', () => {
     btnByMonth.classList.add('active');
     btnByYear.classList.remove('active');

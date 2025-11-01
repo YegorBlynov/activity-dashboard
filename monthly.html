@@ -21,7 +21,7 @@
             z-index: 1200;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             display: flex;
-            justify-content: space-between; /* Распределяем элементы */
+            justify-content: space-between;
             align-items: center;
         }
         .back-button {
@@ -32,7 +32,6 @@
         }
         .back-button span { margin-left: 8px; }
 
-        /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ КНОПОК ПЕРЕКЛЮЧЕНИЯ --- */
         .view-controls {
             display: flex;
             background-color: #2C2C2F;
@@ -54,7 +53,6 @@
         .view-controls button.active {
             background-color: #555;
         }
-        /* --- КОНЕЦ НОВЫХ СТИЛЕЙ --- */
 
         .month-block {
             max-width: 1200px;
@@ -177,7 +175,7 @@
             color: #8e8e93; margin-left: 5px;
         }
 
-        /* --- ✅ НОВЫЕ СТИЛИ ДЛЯ ГОДОВОГО ОБЗОРА --- */
+        /* --- ✅ ИЗМЕНЕНИЯ В СТИЛЯХ ГОДОВОГО ОБЗОРА --- */
         #yearsContainer {
             max-width: 1200px;
             margin: 0 auto;
@@ -213,7 +211,7 @@
         .day-grid-yearly {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 5px; /* Промежуток между кругами */
         }
         .day-cell-yearly {
             display: flex;
@@ -221,9 +219,18 @@
             align-items: center;
         }
         .day-circle {
-            width: 30px; /* Размер круга */
-            height: 30px;
+            /* Убираем фикс. ширину, делаем адаптивным */
+            width: 100%;
+            padding-bottom: 100%; /* Делает элемент квадратным */
             position: relative;
+        }
+        /* Новый стиль, чтобы canvas заполнил .day-circle */
+        .day-circle canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         .day-circle-date {
             font-size: 0.8em;
@@ -246,13 +253,20 @@
             .details-header { font-size: 1.5em; }
             .details-stats .stat-item { font-size: 0.9em; }
 
-            /* --- ✅ МОБИЛЬНЫЕ СТИЛИ ДЛЯ ГОДОВОГО ОБЗОРА --- */
+            /* --- ✅ ИЗМЕНЕНИЯ В МОБИЛЬНЫХ СТИЛЯХ ГОДОВОГО ОБЗОРА --- */
             .months-grid-yearly {
-                grid-template-columns: 1fr; /* Один месяц в ряд */
+                /* grid-template-columns: 1fr; */ /* УДАЛЕНО: 3 колонки остаются */
+                gap: 10px; /* Уменьшаем промежуток между месяцами */
             }
-            .day-circle {
-                width: 25px;
-                height: 25px;
+            .month-cell-yearly {
+                padding: 10px; /* Уменьшаем отступы внутри карточки месяца */
+            }
+            .day-grid-yearly {
+                gap: 3px; /* Уменьшаем промежуток между кругами */
+            }
+            .day-circle-date {
+                font-size: 0.7em; /* Уменьшаем шрифт даты */
+                margin-top: 2px;
             }
         }
     </style>
@@ -278,7 +292,6 @@
     </header>
 
     <div id="monthsContainer"></div>
-    
     <div id="yearsContainer" style="display: none;"></div>
 
     <div id="detailsPopup" class="details-popup">
