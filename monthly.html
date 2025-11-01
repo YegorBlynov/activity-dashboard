@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обзор по месяцам</title>
+    <title>Activity History</title>
+	<link rel="icon" type="image/png" href="favicon.png">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -27,7 +28,7 @@
         .back-button {
             display: flex; align-items: center;
             color: #fff; text-decoration: none;
-            font-size: 1.1em; font-weight: 500;
+            font-size: 2.2em; font-weight: 600;
             padding: 10px; margin-left: -10px;
         }
         .back-button span { margin-left: 8px; }
@@ -191,27 +192,27 @@
         .months-grid-yearly {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 10px;
         }
         .month-cell-yearly {
             background-color: #2C2C2F;
             border-radius: 12px;
-            padding: 10px; /* Было 15px */
+            padding: 5px; 
         }
         .month-header-yearly {
-            font-size: 1.1em; /* Было 1.2em */
+            font-size: 1.4em;
             font-weight: 600;
-            margin-bottom: 3px; /* Было 5px */
+            margin-bottom: 3px;
         }
         .month-stats-yearly {
-            font-size: 0.8em; /* Было 0.9em */
+            font-size: 0.9em; 
             color: #8e8e93;
-            margin-bottom: 10px; /* Было 15px */
+            margin-bottom: 10px;
         }
         .day-grid-yearly {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 3px;
         }
         .day-cell-yearly {
             display: flex;
@@ -231,35 +232,51 @@
             height: 100%;
         }
         .day-circle-date {
-            font-size: 0.7em; /* Было 0.8em */
+            font-size: 0.9em;
             color: #8e8e93;
-            margin-top: 2px; /* Было 4px */
+            margin-top: 2px;
         }
         /* -------------------------------------- */
 
 
         @media (max-width: 768px) {
-            .sticky-header { padding: 10px 15px; }
-            .back-button { font-size: 1em; }
-            .view-controls button { padding: 6px 12px; font-size: 0.8em; }
-
-            .calendar-grid { gap: 10px; }
-            .day-cell .date-label { font-size: 0.6em; }
-            .day-cell.selected { transform: scale(1.3); }
-            .month-title { font-size: 1.5em; }
-            .month-stats { font-size: 0.9em; }
-            .details-header { font-size: 1.5em; }
-            .details-stats .stat-item { font-size: 0.9em; }
-
-            /* --- ✅ ИЗМЕНЕНИЯ В МОБИЛЬНЫХ СТИЛЯХ ГОДОВОГО ОБЗОРА --- */
+            .sticky-header { 
+				padding: 10px 15px; 
+			}
+            .back-button { 
+				font-size: 1em; 
+			}
+            .view-controls button { 
+				padding: 6px 12px; font-size: 0.8em; 
+			}
+            .calendar-grid { 
+				gap: 10px; 
+			}
+            .day-cell .date-label { 
+				font-size: 0.6em; 
+			}
+            .day-cell.selected { 
+				transform: scale(1.3); 
+			}
+            .month-title { 
+				font-size: 1.5em; 
+			}
+            .month-stats { 
+				font-size: 0.9em; 
+			}
+            .details-header { 
+				font-size: 1.5em; 
+			}
+            .details-stats .stat-item { 
+				font-size: 0.9em; 
+			}
             .months-grid-yearly {
-                gap: 10px;
+                gap: 5px;
             }
             .day-grid-yearly {
                 gap: 3px;
             }
-            /* Стили для .month-cell-yearly, .day-circle-date и др. теперь наследуются 
-               от более компактных базовых стилей, поэтому их не нужно переопределять. */
+
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -274,7 +291,7 @@
             <svg width="12" height="21" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.5 1.5L2 10.5L10.5 19.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span> Daily activity</span>
+            <span> Back</span>
         </a>
         
         <div class="view-controls">
