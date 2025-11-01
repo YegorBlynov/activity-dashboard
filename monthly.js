@@ -349,6 +349,8 @@ function renderYearlyMonthGrid(gridContainer, year, month, daysInMonth) {
 }
 
 function renderYearlyDayChart(canvas, data) {
+	const isMobile = window.innerWidth <= 768;
+    const dynamicBorderWidth = isMobile ? 1 : 2; // 1px для мобильных, 2px для ПК
     let chartData, chartColors;
     const offColor = 'rgba(255, 255, 255, 0.1)';
 
@@ -375,7 +377,7 @@ function renderYearlyDayChart(canvas, data) {
                 data: chartData,
                 backgroundColor: chartColors,
                 borderColor: '#2C2C2F',
-                borderWidth: 2,
+                borderWidth: dynamicBorderWidth,
             }]
         },
         options: {
