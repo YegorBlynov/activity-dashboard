@@ -32,7 +32,6 @@ const MONTH_NAMES_SHORT = [
     'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'
 ];
 
-// ✅ Новая переменная для отслеживания состояния
 let hasRenderedYearlyView = false;
 
 // --- ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ---
@@ -75,9 +74,21 @@ function processData(values) {
 
     allData.sort((a, b) => a.dateObject - b.dateObject);
 
-    // ✅ Оставляем только рендер по месяцам при загрузке
     renderByMonthView();
-    // ❌ renderByYearView(); // Убираем отсюда
+}
+
+// --- ✅ ОБНОВЛЕННАЯ ФУНКЦИЯ ПОДСЧЕТА СТАТИСТИКИ ---
+// (Добавлена вспомогательная функция isDayClosed)
+
+function isDayClosed(dayData) {
+    const steps = parseFloat(dayData['Steps']) || 0;
+    const stepsTarget = parseFloat(dayData['Steps Target']) || 1;
+    const activeTime = parseFloat(dayData['Active Time']) || 0;
+    const activeTimeTarget = parseFloat(dayData['Active Time Target']) || 1;
+    const calories = parseFloat(dayData['Calories']) || 0;
+    const caloriesTarget = parseFloat(dayData['Calories Target']) || 1;
+
+    return steps >= stepsTarget && activeTime >= activeTimeTarget && calories >= caloriesTarget;
 }
 
 function calculateMonthStats(monthData) {
@@ -86,14 +97,7 @@ function calculateMonthStats(monthData) {
 
     if (monthData.length > 0) {
         fullyClosedDays = monthData.reduce((count, dayData) => {
-            const steps = parseFloat(dayData['Steps']) || 0;
-            const stepsTarget = parseFloat(dayData['Steps Target']) || 1;
-            const activeTime = parseFloat(dayData['Active Time']) || 0;
-            const activeTimeTarget = parseFloat(dayData['Active Time Target']) || 1;
-            const calories = parseFloat(dayData['Calories']) || 0;
-            const caloriesTarget = parseFloat(dayData['Calories Target']) || 1;
-
-            if (steps >= stepsTarget && activeTime >= activeTimeTarget && calories >= caloriesTarget) {
+            if (isDayClosed(dayData)) {
                 return count + 1;
             }
             return count;
@@ -110,30 +114,24 @@ function calculateMonthStats(monthData) {
 
 
 // --- 1. ЛОГИКА ДЛЯ ПОМЕСЯЧНОГО ВИДА ---
-
 function renderByMonthView() {
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     if (allData.length === 0) return;
-    
     const firstDate = allData[0].dateObject;
     const lastDate = new Date();
     let currentDateIterator = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
-
     while (currentDateIterator <= lastDate) {
         const year = currentDateIterator.getFullYear();
         const month = currentDateIterator.getMonth();
-        
         const monthBlock = document.createElement('div');
         monthBlock.classList.add('month-block');
-
         const title = document.createElement('h2');
         title.classList.add('month-title');
         title.textContent = `${MONTH_NAMES[month]} ${year}`;
         monthBlock.appendChild(title);
-        
         const monthData = allData.filter(d => d.dateObject.getFullYear() === year && d.dateObject.getMonth() === month);
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const { fullyClosedDays, totals } = calculateMonthStats(monthData);
-        
         const statsContainer = document.createElement('div');
         statsContainer.classList.add('month-stats');
         statsContainer.innerHTML = `
@@ -141,7 +139,6 @@ function renderByMonthView() {
             <p>${totals.steps.toLocaleString('ru-RU')} шагов | ${totals.activeTime.toLocaleString('ru-RU')} мин | ${totals.calories.toLocaleString('ru-RU')} кал</p>
         `;
         monthBlock.appendChild(statsContainer);
-
         const grid = document.createElement('div');
         grid.classList.add('calendar-grid');
         renderMonthGrid(grid, year, month);
@@ -153,13 +150,13 @@ function renderByMonthView() {
 }
 
 function renderMonthGrid(gridContainer, year, month) {
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     let startOffset = (firstDayOfMonth.getDay() + 6) % 7;
     for (let i = 0; i < startOffset; i++) {
         gridContainer.appendChild(document.createElement('div'));
     }
-
     for (let day = 1; day <= daysInMonth; day++) {
         const cell = document.createElement('div');
         cell.classList.add('day-cell');
@@ -170,15 +167,12 @@ function renderMonthGrid(gridContainer, year, month) {
         const chartContainer = document.createElement('div');
         chartContainer.classList.add('chart-container');
         cell.appendChild(chartContainer);
-
         const currentDayData = allData.find(d => 
             d.dateObject.getFullYear() === year &&
             d.dateObject.getMonth() === month &&
             d.dateObject.getDate() === day
         );
-        
         renderDayChart(chartContainer, currentDayData);
-        
         if (currentDayData) {
             cell.style.cursor = 'pointer';
             cell.addEventListener('click', () => {
@@ -259,13 +253,12 @@ function renderDayChart(container, data) {
 }
 
 
-// --- 2. ЛОГИКА ДЛЯ ПОГОДОВОГО ВИДА ---
+// --- 2. ✅ ОБНОВЛЕННАЯ ЛОГИКА ДЛЯ ПОГОДОВОГО ВИДА ---
 
 function renderByYearView() {
     if (allData.length === 0) return;
     yearsContainer.innerHTML = '';
 
-    // ✅ ИЗМЕНЕНА СОРТИРОВКА: a - b (сначала старые, потом новые)
     const years = [...new Set(allData.map(d => d.dateObject.getFullYear()))].sort((a, b) => a - b);
 
     for (const year of years) {
@@ -276,6 +269,12 @@ function renderByYearView() {
         yearTitle.classList.add('year-title');
         yearTitle.textContent = year;
         yearBlock.appendChild(yearTitle);
+
+        // --- Новая логика подсчета за год ---
+        let totalClosedDaysInYear = 0;
+        const isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        const totalDaysInYear = isLeap ? 366 : 365;
+        // ---
 
         const monthsGrid = document.createElement('div');
         monthsGrid.classList.add('months-grid-yearly');
@@ -290,16 +289,25 @@ function renderByYearView() {
             );
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const { fullyClosedDays } = calculateMonthStats(monthData);
+            
+            totalClosedDaysInYear += fullyClosedDays; // Суммируем для годового итога
+
+            // --- Новая HTML-структура для заголовка месяца ---
+            const headerWrapper = document.createElement('div');
+            headerWrapper.classList.add('month-header-wrapper');
 
             const monthHeader = document.createElement('div');
             monthHeader.classList.add('month-header-yearly');
             monthHeader.textContent = MONTH_NAMES_SHORT[month];
-            monthCell.appendChild(monthHeader);
+            headerWrapper.appendChild(monthHeader);
 
             const monthStats = document.createElement('div');
             monthStats.classList.add('month-stats-yearly');
-            monthStats.textContent = `${fullyClosedDays} / ${daysInMonth} дней`;
-            monthCell.appendChild(monthStats);
+            monthStats.textContent = `${fullyClosedDays} / ${daysInMonth} д.`;
+            headerWrapper.appendChild(monthStats);
+            
+            monthCell.appendChild(headerWrapper); // Добавляем обертку
+            // --- Конец новой структуры ---
 
             const dayGrid = document.createElement('div');
             dayGrid.classList.add('day-grid-yearly');
@@ -308,40 +316,42 @@ function renderByYearView() {
             
             monthsGrid.appendChild(monthCell);
         }
+        
+        // --- Добавляем итоговую статистику за год ---
+        const yearStatsEl = document.createElement('p');
+        yearStatsEl.classList.add('year-stats');
+        yearStatsEl.textContent = `Цель достигнута: ${totalClosedDaysInYear} / ${totalDaysInYear} дней`;
+        yearBlock.appendChild(yearStatsEl);
+        // ---
+        
         yearBlock.appendChild(monthsGrid);
         yearsContainer.appendChild(yearBlock);
     }
 }
 
 function renderYearlyMonthGrid(gridContainer, year, month, daysInMonth) {
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     const firstDayOfMonth = new Date(year, month, 1);
     let startOffset = (firstDayOfMonth.getDay() + 6) % 7;
     for (let i = 0; i < startOffset; i++) {
         gridContainer.appendChild(document.createElement('div'));
     }
-
     for (let day = 1; day <= daysInMonth; day++) {
         const dayCell = document.createElement('div');
         dayCell.classList.add('day-cell-yearly');
-
         const dayCircle = document.createElement('div');
         dayCircle.classList.add('day-circle');
-        
         const canvas = document.createElement('canvas');
         dayCircle.appendChild(canvas);
-        
         const currentDayData = allData.find(d => 
             d.dateObject.getFullYear() === year &&
             d.dateObject.getMonth() === month &&
             d.dateObject.getDate() === day
         );
-
         renderYearlyDayChart(canvas, currentDayData);
-
         const dateLabel = document.createElement('div');
         dateLabel.classList.add('day-circle-date');
         dateLabel.textContent = day;
-        
         dayCell.appendChild(dayCircle);
         dayCell.appendChild(dateLabel);
         gridContainer.appendChild(dayCell);
@@ -349,16 +359,15 @@ function renderYearlyMonthGrid(gridContainer, year, month, daysInMonth) {
 }
 
 function renderYearlyDayChart(canvas, data) {
-	const isMobile = window.innerWidth <= 768;
-    const dynamicBorderWidth = isMobile ? 1 : 2; // 1px для мобильных, 2px для ПК
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
+    const isMobile = window.innerWidth <= 768;
+    const dynamicBorderWidth = isMobile ? 1 : 2;
     let chartData, chartColors;
     const offColor = 'rgba(255, 255, 255, 0.1)';
-
     if (data) {
-        const stepsDone = (parseFloat(data['Steps']) || 0) >= (parseFloat(data['Steps Target']) || 1);
+        const stepsDone = isDayClosed(data); // Используем новую функцию
         const timeDone = (parseFloat(data['Active Time']) || 0) >= (parseFloat(data['Active Time Target']) || 1);
         const calsDone = (parseFloat(data['Calories']) || 0) >= (parseFloat(data['Calories Target']) || 1);
-
         chartData = [1, 1, 1];
         chartColors = [
             stepsDone ? COLORS.steps : offColor,
@@ -369,7 +378,6 @@ function renderYearlyDayChart(canvas, data) {
         chartData = [1];
         chartColors = [offColor];
     }
-
     new Chart(canvas, {
         type: 'doughnut',
         data: {
@@ -395,18 +403,16 @@ function renderYearlyDayChart(canvas, data) {
 
 
 // --- 3. ЛОГИКА POPUP И ПЕРЕКЛЮЧАТЕЛЕЙ ---
-
 function showDetailsPopup(data) {
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     detailsDate.textContent = data.dateObject.toLocaleDateString('ru-RU', dateOptions);
-    
     const steps = parseFloat(data['Steps']) || 0;
     const stepsTarget = parseFloat(data['Steps Target']) || 1;
     const activeTime = parseFloat(data['Active Time']) || 0;
     const activeTimeTarget = parseFloat(data['Active Time Target']) || 1;
     const calories = parseFloat(data['Calories']) || 0;
     const caloriesTarget = parseFloat(data['Calories Target']) || 1;
-
     detailsStats.innerHTML = `
         <div class="stat-item">
             <span class="icon" style="background-color: ${COLORS.steps};"></span>
@@ -426,6 +432,7 @@ function showDetailsPopup(data) {
 }
 
 function hideDetailsPopup() {
+    // ... (Эта функция остается БЕЗ ИЗМЕНЕНИЙ)
     detailsPopup.classList.remove('visible');
     spotlightOverlay.classList.remove('visible');
     document.querySelectorAll('.day-cell.selected').forEach(selectedCell => {
@@ -453,12 +460,10 @@ btnByMonth.addEventListener('click', () => {
     yearsContainer.style.display = 'none';
 });
 
-// ✅ ОБНОВЛЕННЫЙ ОБРАБОТЧИК
 btnByYear.addEventListener('click', () => {
     btnByYear.classList.add('active');
     btnByMonth.classList.remove('active');
     
-    // ✅ Рендерим годовой вид только при первом нажатии
     if (!hasRenderedYearlyView) {
         renderByYearView();
         hasRenderedYearlyView = true;

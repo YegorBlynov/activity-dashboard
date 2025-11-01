@@ -187,8 +187,18 @@
             font-weight: 700;
             text-align: center;
             margin-top: 40px;
+            margin-bottom: 10px; /* Уменьшен отступ */
+        }
+        /* Новый класс для статистики года */
+        .year-stats {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #8e8e93;
+            text-align: center;
+            margin-top: 0;
             margin-bottom: 30px;
         }
+        
         .months-grid-yearly {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -199,16 +209,27 @@
             border-radius: 12px;
             padding: 10px; 
         }
+        
+        /* Новый wrapper для flex-разметки */
+        .month-header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline; /* Выравнивание по базовой линии текста */
+            margin-bottom: 10px; /* Отступ до сетки дней */
+        }
         .month-header-yearly {
             font-size: 1.4em;
             font-weight: 600;
-            margin-bottom: 3px;
+            margin-bottom: 0; /* Убран */
         }
         .month-stats-yearly {
             font-size: 0.9em; 
             color: #8e8e93;
-            margin-bottom: 10px;
+            margin-bottom: 0; /* Убран */
+            white-space: nowrap; /* Не переносить текст */
+            padding-left: 5px;
         }
+        
         .day-grid-yearly {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -235,60 +256,46 @@
             font-size: 0.9em;
             color: #8e8e93;
             margin-top: 1px;
+            line-height: 1;
         }
         /* -------------------------------------- */
 
 
         @media (max-width: 768px) {
-            .sticky-header { 
-				padding: 10px 15px; 
-			}
-            .back-button { 
-				font-size: 1em; 
-			}
-            .view-controls button { 
-				padding: 6px 12px; font-size: 0.8em; 
-			}
-            .calendar-grid { 
-				gap: 10px; 
-			}
-            .day-cell .date-label { 
-				font-size: 0.6em; 
-			}
-            .day-cell.selected { 
-				transform: scale(1.3); 
-			}
-            .month-title { 
-				font-size: 1.5em; 
-			}
-            .month-stats { 
-				font-size: 0.9em; 
-			}
-            .details-header { 
-				font-size: 1.5em; 
-			}
-            .details-stats .stat-item { 
-				font-size: 0.9em; 
-			}
+            .sticky-header { padding: 10px 15px; }
+            .back-button { font-size: 1em; }
+            .view-controls button { padding: 6px 12px; font-size: 0.8em; }
+
+            .calendar-grid { gap: 10px; }
+            .day-cell .date-label { font-size: 0.6em; }
+            .day-cell.selected { transform: scale(1.3); }
+            .month-title { font-size: 1.5em; }
+            .month-stats { font-size: 0.9em; }
+            .details-header { font-size: 1.5em; }
+            .details-stats .stat-item { font-size: 0.9em; }
 			
 			/* BY YEAR */
-			
-            .months-grid-yearly {
+            .year-stats {
+                font-size: 1em;
+                margin-bottom: 20px;
+            }
+			.months-grid-yearly {
                 gap: 5px;
             }
+            .month-header-wrapper {
+                margin-bottom: 8px;
+            }
+            .month-header-yearly {
+				font-size: 0.9em;
+			}
+			.month-stats-yearly {
+				font-size: 0.5em; 
+			}
             .day-grid-yearly {
                 gap: 1px;
             }
 			.day-circle-date {
-				font-size: 0.6em;
-			}
-			.month-header-yearly {
-				font-size: 1.1em;
-				margin-bottom: 2px;
-			}
-			.month-stats-yearly {
-				font-size: 0.6em; 
-				margin-bottom: 8px;
+				font-size: 0.5em;
 			}
         }
     </style>
